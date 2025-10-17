@@ -3,22 +3,15 @@ import {
 	bearer,
 	admin,
 	multiSession,
-	organization,
-	twoFactor,
 	oneTap,
 	oAuthProxy,
 	openAPI,
 	customSession,
-	deviceAuthorization,
 	lastLoginMethod,
 } from "better-auth/plugins";
-import { reactInvitationEmail } from "./email/invitation";
-import { LibsqlDialect } from "@libsql/kysely-libsql";
 import { reactResetPasswordEmail } from "./email/reset-password";
 import { resend } from "./email/resend";
 import Database from "better-sqlite3";
-import { MysqlDialect } from "kysely";
-import { createPool } from "mysql2/promise";
 import { nextCookies } from "better-auth/next-js";
 import { passkey } from "better-auth/plugins/passkey";
 import { stripe } from "@better-auth/stripe";
@@ -27,8 +20,6 @@ import { Stripe } from "stripe";
 
 const from = process.env.BETTER_AUTH_EMAIL || "delivered@resend.dev";
 const to = process.env.TEST_EMAIL || "";
-
-// SQLite専用: dialect判定ロジックを削除
 
 const baseURL: string | undefined =
 	process.env.VERCEL === "1"
@@ -117,40 +108,6 @@ export const auth = betterAuth({
 		},
 	},
 	plugins: [
-		organization({
-			async sendInvitationEmail(data) {
-				await resend.emails.send({
-					from,
-					to: data.email,
-					subject: "You've been invited to join an organization",
-					react: reactInvitationEmail({
-						username: data.email,
-						invitedByUsername: data.inviter.user.name,
-						invitedByEmail: data.inviter.user.email,
-						teamName: data.organization.name,
-						inviteLink:
-							process.env.NODE_ENV === "development"
-								? `http://localhost:3000/accept-invitation/${data.id}`
-								: `${
-										process.env.BETTER_AUTH_URL ||
-										"https://demo.better-auth.com"
-									}/accept-invitation/${data.id}`,
-					}),
-				});
-			},
-		}),
-		twoFactor({
-			otpOptions: {
-				async sendOTP({ user, otp }) {
-					await resend.emails.send({
-						from,
-						to: user.email,
-						subject: "Your OTP",
-						html: `Your OTP is ${otp}`,
-					});
-				},
-			},
-		}),
 		passkey(),
 		openAPI(),
 		bearer(),
@@ -320,10 +277,6 @@ export const auth = betterAuth({
 					},
 				},
 			],
-		}),
-		deviceAuthorization({
-			expiresIn: "3min",
-			interval: "5s",
 		}),
 		lastLoginMethod(),
 	],

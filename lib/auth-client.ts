@@ -1,27 +1,19 @@
 import { createAuthClient } from "better-auth/react";
 import {
-	organizationClient,
-	passkeyClient,
-	twoFactorClient,
 	adminClient,
 	multiSessionClient,
 	oneTapClient,
 	oidcClient,
 	genericOAuthClient,
-	deviceAuthorizationClient,
 	lastLoginMethodClient,
+	passkeyClient,
 } from "better-auth/client/plugins";
 import { toast } from "sonner";
 import { stripeClient } from "@better-auth/stripe/client";
 
 export const client = createAuthClient({
 	plugins: [
-		organizationClient(),
-		twoFactorClient({
-			onTwoFactorRedirect() {
-				window.location.href = "/two-factor";
-			},
-		}),
+	// organization and twoFactor clients removed; keep passkey client
 		passkeyClient(),
 		adminClient(),
 		multiSessionClient(),
@@ -36,7 +28,7 @@ export const client = createAuthClient({
 		stripeClient({
 			subscription: true,
 		}),
-		deviceAuthorizationClient(),
+	// deviceAuthorization client removed
 		lastLoginMethodClient(),
 	],
 	fetchOptions: {
@@ -53,9 +45,4 @@ export const {
 	signIn,
 	signOut,
 	useSession,
-	organization,
-	useListOrganizations,
-	useActiveOrganization,
-	useActiveMember,
-	useActiveMemberRole,
 } = client;
