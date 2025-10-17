@@ -13,12 +13,11 @@ import { reactResetPasswordEmail } from "./email/reset-password";
 import { resend } from "./email/resend";
 import Database from "better-sqlite3";
 import { nextCookies } from "better-auth/next-js";
-import { passkey } from "better-auth/plugins/passkey";
 import { stripe } from "@better-auth/stripe";
 import { sso } from "@better-auth/sso";
 import { Stripe } from "stripe";
 
-const from = process.env.BETTER_AUTH_EMAIL || "delivered@resend.dev";
+const from = process.env.BETTER_AUTH_EMAIL || "";
 const to = process.env.TEST_EMAIL || "";
 
 const baseURL: string | undefined =
@@ -108,7 +107,6 @@ export const auth = betterAuth({
 		},
 	},
 	plugins: [
-		passkey(),
 		openAPI(),
 		bearer(),
 		admin({

@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { signOut } from "@/lib/auth-client";
+import SignOutButton from "@/components/sign-out-button";
 
 export default async function DashboardPage() {
 	const session = await auth
@@ -18,15 +18,7 @@ export default async function DashboardPage() {
 					<p className="text-sm text-muted-foreground">
 						Signed in as {session?.user?.email}
 					</p>
-					<form
-						action={async () => {
-							await signOut({ fetchOptions: { onSuccess() {} } });
-						}}
-					>
-						<button type="submit" className="mt-4 btn">
-							Sign out
-						</button>
-					</form>
+					<SignOutButton />
 				</div>
 			</div>
 		</div>

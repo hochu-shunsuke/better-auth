@@ -11,12 +11,10 @@ const features = [
 		link: "https://www.better-auth.com/docs/plugins/organization",
 	},
 	{
-		name: "Passkeys",
-		link: "https://www.better-auth.com/docs/plugins/passkey",
+		// Passkeys removed for minimal demo
 	},
 	{
-		name: "Multi Factor",
-		link: "https://www.better-auth.com/docs/plugins/2fa",
+		// Multi Factor removed for minimal demo
 	},
 	{
 		name: "Password Reset",
@@ -71,13 +69,13 @@ export default async function Home() {
 							</div>
 						</div>
 						<div className="flex gap-2 justify-center flex-wrap">
-							{features.map((feature) => (
+									{features.map((feature, idx) => (
 								<a
 									className="border-b pb-1 text-muted-foreground text-xs cursor-pointer hover:text-foreground duration-150 ease-in-out transition-all hover:border-foreground flex items-center gap-1"
-									key={feature.name}
-									href={feature.link}
+									key={feature.name ?? `feature-${idx}`}
+									href={feature.link ?? "#"}
 								>
-									{feature.name}
+									{feature.name ?? `Feature ${idx + 1}`}
 								</a>
 							))}
 						</div>

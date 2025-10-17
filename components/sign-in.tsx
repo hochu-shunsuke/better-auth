@@ -219,14 +219,14 @@ export default function SignIn() {
 			<CardFooter>
 				<div className="flex justify-center w-full border-t pt-4">
 					<p className="text-center text-xs text-neutral-500">
-						built with{" "}
+						operated by{" "}
 						<Link
-							href="https://better-auth.com"
+							href="https://josho-group.com/"
 							className="underline"
 							target="_blank"
 						>
 							<span className="dark:text-white/70 cursor-pointer">
-								better-auth.
+								Josho inc.
 							</span>
 						</Link>
 					</p>

@@ -6,15 +6,14 @@ import {
 	oidcClient,
 	genericOAuthClient,
 	lastLoginMethodClient,
-	passkeyClient,
+	// passkeyClient removed
 } from "better-auth/client/plugins";
 import { toast } from "sonner";
 import { stripeClient } from "@better-auth/stripe/client";
 
 export const client = createAuthClient({
 	plugins: [
-	// organization and twoFactor clients removed; keep passkey client
-		passkeyClient(),
+	// organization and twoFactor clients removed; passkey client removed
 		adminClient(),
 		multiSessionClient(),
 		oneTapClient({

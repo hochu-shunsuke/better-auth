@@ -156,25 +156,7 @@ function SignInBox() {
 				</svg>
 				<p>Continue With Google</p>
 			</Button>
-			<Button
-				variant="outline"
-				className="gap-2"
-				onClick={async () => {
-					await signIn.passkey({
-						fetchOptions: {
-							onSuccess(context) {
-								router.push("/dashboard");
-							},
-							onError(context) {
-								toast.error(context.error.message);
-							},
-						},
-					});
-				}}
-			>
-				<Key size={16} />
-				Sign-in with Passkey
-			</Button>
+			{/* Passkey sign-in removed for minimal demo */}
 		</div>
 	);
 }
