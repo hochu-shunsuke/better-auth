@@ -25,15 +25,9 @@ export default function SignIn() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [loading, startTransition] = useTransition();
-	const [rememberMe, setRememberMe] = useState(false);
 	const router = useRouter();
 	const params = useSearchParams();
 
-	const LastUsedIndicator = () => (
-		<span className="ml-auto absolute top-0 right-0 px-2 py-1 text-xs bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300 rounded-md font-medium">
-			Last Used
-		</span>
-	);
 
 	return (
 		<Card className="max-w-md rounded-none">
@@ -80,15 +74,6 @@ export default function SignIn() {
 						/>
 					</div>
 
-					<div className="flex items-center gap-2">
-						<Checkbox
-							id="remember"
-							onClick={() => {
-								setRememberMe(!rememberMe);
-							}}
-						/>
-						<Label htmlFor="remember">Remember me</Label>
-					</div>
 
 					<Button
 						type="submit"
@@ -96,8 +81,8 @@ export default function SignIn() {
 						disabled={loading}
 						onClick={async () => {
 							startTransition(async () => {
-								await signIn.email(
-									{ email, password, rememberMe },
+												await signIn.email(
+													{ email, password },
 									{
 										onSuccess(context) {
 											toast.success("Successfully signed in");
@@ -117,7 +102,6 @@ export default function SignIn() {
 							) : (
 								"Login"
 							)}
-							{client.isLastUsedLoginMethod("email") && <LastUsedIndicator />}
 						</div>
 					</Button>
 
@@ -161,7 +145,6 @@ export default function SignIn() {
 								></path>
 							</svg>
 							<span>Sign in with Google</span>
-							{client.isLastUsedLoginMethod("google") && <LastUsedIndicator />}
 						</Button>
 						<Button
 							variant="outline"
@@ -185,7 +168,6 @@ export default function SignIn() {
 								></path>
 							</svg>
 							<span>Sign in with GitHub</span>
-							{client.isLastUsedLoginMethod("github") && <LastUsedIndicator />}
 						</Button>
 						<Button
 							variant="outline"
@@ -209,9 +191,6 @@ export default function SignIn() {
 								></path>
 							</svg>
 							<span>Sign in with Microsoft</span>
-							{client.isLastUsedLoginMethod("microsoft") && (
-								<LastUsedIndicator />
-							)}
 						</Button>
 					</div>
 				</div>
