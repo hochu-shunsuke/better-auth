@@ -6,11 +6,12 @@ import {
 	oAuthProxy,
 	openAPI,
 	customSession,
+	jwt
 } from "better-auth/plugins";
 import { reactResetPasswordEmail } from "./email/reset-password";
 import { resend } from "./email/resend";
-import Database from "better-sqlite3";
 import { nextCookies } from "better-auth/next-js";
+import { Pool } from "pg";
 
 
 const from = process.env.BETTER_AUTH_EMAIL || "";
@@ -37,7 +38,10 @@ const cookieDomain: string | undefined =
 export const auth = betterAuth({
 	appName: "Better Auth Demo",
 	baseURL,
-	database: new Database("database.sqlite"),
+	secret: process.env.BETTER_AUTH_SECRET,
+	database: new Pool({
+		connectionString: process.env.DATABASE_URL
+	}),
 	emailVerification: {
 		async sendVerificationEmail({ user, url }) {
 			const res = await resend.emails.send({
@@ -115,6 +119,7 @@ export const auth = betterAuth({
 		multiSession(),
 		oAuthProxy(),
 		nextCookies(),
+		jwt(),
 		customSession(async (session) => {
 			return {
 				...session,
