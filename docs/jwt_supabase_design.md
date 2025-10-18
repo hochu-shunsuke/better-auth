@@ -20,9 +20,9 @@
   "sub": "ユーザID",
   "email": "メールアドレス",
   "role": "ユーザ権限",
-  "exp": 1678886400
+  "exp": 1678886400 // 有効期限は expirationTime で自動付与
 }
-````
+```
 
 ### 設定例: `lib/auth.ts`（RS256採用）
 
@@ -37,7 +37,7 @@ export const auth = betterAuth({
       // 1. RS256 (非対称署名) の設定
       jwks: {
         keyPairConfig: {
-          alg: "RSA256", // EdDSA (デフォルト) から RSA256 に変更
+          alg: "RS256", // 標準表記に統一
           modulusLength: 4096 // セキュリティ強化のため鍵長を4096bitに設定
         }
       },
@@ -56,7 +56,37 @@ export const auth = betterAuth({
 });
 ```
 
-- JWTの有効期限（exp）は**15分**とし、リフレッシュトークンによる再認証フローを設計する。
+---
+
+## JWKSエンドポイントの検証例（Node.js, jose）
+
+```typescript
+import { jwtVerify, createRemoteJWKSet } from 'jose';
+
+const JWKS = createRemoteJWKSet(new URL('https://your-app.com/api/auth/jwks'));
+
+async function verifyJwt(token: string) {
+  const { payload } = await jwtVerify(token, JWKS, {
+    issuer: 'https://your-app.com',
+    audience: 'https://your-app.com'
+  });
+  return payload;
+}
+```
+
+---
+
+## リフレッシュトークン失効API例
+
+```typescript
+// POST /api/auth/logout
+export async function logout(req, res) {
+  // リフレッシュトークンをDBで失効
+  await db.invalidateRefreshToken(req.cookies.refreshToken);
+  res.clearCookie('refreshToken');
+  res.status(200).json({ success: true });
+}
+```
 
 ---
 
@@ -78,6 +108,8 @@ CREATE POLICY "Creators can insert new posts" ON posts
   FOR INSERT WITH CHECK (auth.jwt() ->> 'role' = 'creator');
 ```
 
+（id型に応じてキャストを調整すること）
+
 ---
 
 ## 3. 運用・セキュリティベストプラクティス
@@ -87,41 +119,12 @@ CREATE POLICY "Creators can insert new posts" ON posts
 - **トークン戦略**:
   - JWT (Access Token) は短命（15分）。
   - リフレッシュトークンは**HttpOnly, Secure Cookie**で保存し、サーバー側（better-auth側）のDBで失効管理を**必須**とする。
+  - 失効API例は上記参照。
 - **Claimの原則**: `sub`, `role`, `email`など、アクセス制御に必要な最小限のデータのみを含める。
 - **RLS**: RLSポリシーはSQLでバージョン管理し、テスト手順もドキュメントに記載。
 - **失効対応**: JWTの即時失効は、原則としてAccess Tokenの**期限切れに委ねる**。全ユーザの強制ログアウトが必要な場合は、better-auth側での**鍵のローテーション**で対応。
 - **監査ログ**: JWT発行・リフレッシュ・失効・認証失敗など主要イベントは監査ログに記録。
 - **通信**: HTTPS必須。
+- **鍵ローテーション手順**: 運用時の鍵の安全な切り替え（Supabaseとbetter-auth双方）は運用ドキュメント参照。
 
 ---
-
-## 4. クライアント・認証設計
-
-- クライアントは**better-authの`jwtClient`プラグイン**を利用してJWTを取得・管理することを推奨。
-- JWT取得後、Supabase API/DBアクセス時に`Authorization: Bearer <token>`ヘッダーで送信。
-- better-authは**JWKSエンドポイント** (`/api/auth/jwks`) を提供するため、他のマイクロサービスやサーバーサイドでJWTを検証する際にも利用可能。
-
-### SupabaseクライアントでJWTをセットする例: `lib/supabase-client.ts`
-
-```typescript
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-// better-authから取得したJWTをセット
-export function setJwt(token: string) {
-  // Supabase JSクライアントにJWTを設定
-  supabase.auth.setAuth(token);
-}
-```
-
----
-
-## 5. 今後の設計論点（要検討・要実装）
-
-- **リフレッシュトークンのサーバー側管理**： better-authのセッション関連機能を利用した、リフレッシュトークンの失効ロジック（DBでの管理）の具体的な実装。
-- **複雑なRLSポリシー**： マルチテナントIDやより粒度の高い権限（JSONBでのclaim格納）が必要な場合のRLS SQL関数の設計。
-- **鍵のローテーション手順**： 運用時の鍵の安全な切り替え（Supabaseとbetter-auth双方）の手順をドキュメント化。
