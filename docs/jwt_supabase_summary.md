@@ -58,8 +58,18 @@ JWT_AUDIENCE=https://xxxx.supabase.co
 - ポリシー例:
 
   ```sql
-  create policy "Users can access their own posts" on posts_private
-    for all using (user_id = auth.uid());
+
+    create policy select_own_posts on posts_private
+    for select using (auth.jwt() ->> 'sub' = user_id);
+
+    create policy insert_own_posts on posts_private
+    for insert with check (auth.jwt() ->> 'sub' = user_id);
+
+    create policy select_all on posts_public
+    for select using (true);
+
+    create policy insert_all on posts_public
+    for insert with check (true);
   ```
 
 ## よくあるエラーと対策
