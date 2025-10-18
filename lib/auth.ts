@@ -6,7 +6,6 @@ import {
 	oAuthProxy,
 	openAPI,
 	customSession,
-	jwt
 } from "better-auth/plugins";
 import { reactResetPasswordEmail } from "./email/reset-password";
 import { resend } from "./email/resend";
@@ -119,7 +118,6 @@ export const auth = betterAuth({
 		multiSession(),
 		oAuthProxy(),
 		nextCookies(),
-		jwt(),
 		customSession(async (session) => {
 			return {
 				...session,

@@ -19,6 +19,22 @@ export default async function DashboardPage() {
 						Signed in as {session?.user?.email}
 					</p>
 					<SignOutButton />
+						<ul style={{ marginTop: 24 }}>
+							<li>
+								<a href="/client-test/posts_private" style={{ color: '#2563eb', textDecoration: 'underline' }}>
+									posts_private へ
+								</a>
+							</li>
+							<li>
+								<a href="/client-test/posts_public" style={{ color: '#2563eb', textDecoration: 'underline' }}>
+									posts_public へ
+								</a>
+							</li><li>
+								<a href="/api/auth/jwt" style={{ color: '#2563eb', textDecoration: 'underline' }}>
+									jwt取得
+								</a>
+							</li>
+						</ul>
 				</div>
 			</div>
 		</div>

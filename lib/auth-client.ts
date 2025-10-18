@@ -3,8 +3,7 @@ import {
 	adminClient,
 	multiSessionClient,
 	oidcClient,
-	genericOAuthClient,
-	jwtClient
+	genericOAuthClient
 } from "better-auth/client/plugins";
 import { toast } from "sonner";
 
@@ -14,7 +13,6 @@ export const client = createAuthClient({
 		multiSessionClient(),
 		oidcClient(),
 		genericOAuthClient(),
-		jwtClient(),
 	],
 	fetchOptions: {
 		onError(e) {
