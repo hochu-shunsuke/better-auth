@@ -86,6 +86,9 @@ export default async function Home() {
 						<SignInButton />
 					</Suspense>
 				</div>
+				<a href="https://github.com/hochu-shunsuke/better-auth" target="_blank" rel="noopener noreferrer">
+						<img src="https://gh-card.dev/repos/hochu-shunsuke/better-auth.svg?fullname=" alt="GitHub Repo Card" style={{ display: "block", margin: "0 auto" }} width={400} />
+				</a>
 			</main>
 		</div>
 	);
