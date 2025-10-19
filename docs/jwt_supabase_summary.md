@@ -2,8 +2,8 @@
 
 ## 目的
 
-- 独自ES256鍵ペアでJWTを発行し、SupabaseのRLS（Row Level Security）で安全に認証・認可を行う
-- better-authで認証、joseでJWT署名、SupabaseでJWT検証
+- 独自ES256鍵ペアでJWTを発行し，SupabaseのRLS（Row Level Security）で安全に認証・認可を行う
+- better-authで認証，joseでJWT署名，SupabaseでJWT検証
 
 ## 鍵管理・生成手順
 
@@ -42,7 +42,7 @@ JWT_AUDIENCE=https://xxxx.supabase.co
 
 ## JWT発行・検証フロー
 
-- joseでES256署名、kid/alg/iss/audを正しくセット
+- joseでES256署名，kid/alg/iss/audを正しくセット
 - JWTのsubにユーザーIDを入れる
 - SupabaseのCurrent key（d付きJWK）で検証
 
@@ -87,4 +87,4 @@ JWT_AUDIENCE=https://xxxx.supabase.co
 
 ---
 
-この手順・構成で、Supabase × JWT × RLSの安全な認証・認可が実現できます。
+この手順・構成で，Supabase × JWT × RLSの安全な認証・認可が実現できます．

@@ -12,8 +12,8 @@
 ## 1. JWT設計（better-auth側）
 
 - alg: **RS256**（非対称署名）
-- better-authで生成された公開鍵をSupabaseの`jwt.secret`に**PEM形式**で設定。秘密鍵はbetter-auth側で厳重管理。
-- payload例: RLSで使用するため、必要最小限のclaimを定義。`sub`はRLSで`id`との比較に必須。
+- better-authで生成された公開鍵をSupabaseの`jwt.secret`に**PEM形式**で設定．秘密鍵はbetter-auth側で厳重管理．
+- payload例: RLSで使用するため，必要最小限のclaimを定義．`sub`はRLSで`id`との比較に必須．
 
 ```json
 {
@@ -92,7 +92,7 @@ export async function logout(req, res) {
 
 ## 2. Supabase RLSポリシー例
 
-- JWTのclaim（sub, role, email）でアクセス制御を行う。
+- JWTのclaim（sub, role, email）でアクセス制御を行う．
 
 ```sql
 -- ユーザ自身のみアクセス可 (sub claimを使用)
@@ -114,17 +114,17 @@ CREATE POLICY "Creators can insert new posts" ON posts
 
 ## 3. 運用・セキュリティベストプラクティス
 
-- **公開鍵の設定**: better-authが生成したRS256の公開鍵をPEM形式でSupabaseに設定（`ALTER DATABASE ... SET jwt.secret = '...'`）。
-- **鍵管理**: 秘密鍵はopenssl等で生成し、**KMS (Key Management Service)** や環境変数で厳重管理。
+- **公開鍵の設定**: better-authが生成したRS256の公開鍵をPEM形式でSupabaseに設定（`ALTER DATABASE ... SET jwt.secret = '...'`）．
+- **鍵管理**: 秘密鍵はopenssl等で生成し，**KMS (Key Management Service)** や環境変数で厳重管理．
 - **トークン戦略**:
-  - JWT (Access Token) は短命（15分）。
-  - リフレッシュトークンは**HttpOnly, Secure Cookie**で保存し、サーバー側（better-auth側）のDBで失効管理を**必須**とする。
-  - 失効API例は上記参照。
-- **Claimの原則**: `sub`, `role`, `email`など、アクセス制御に必要な最小限のデータのみを含める。
-- **RLS**: RLSポリシーはSQLでバージョン管理し、テスト手順もドキュメントに記載。
-- **失効対応**: JWTの即時失効は、原則としてAccess Tokenの**期限切れに委ねる**。全ユーザの強制ログアウトが必要な場合は、better-auth側での**鍵のローテーション**で対応。
-- **監査ログ**: JWT発行・リフレッシュ・失効・認証失敗など主要イベントは監査ログに記録。
-- **通信**: HTTPS必須。
-- **鍵ローテーション手順**: 運用時の鍵の安全な切り替え（Supabaseとbetter-auth双方）は運用ドキュメント参照。
+  - JWT (Access Token) は短命（15分）．
+  - リフレッシュトークンは**HttpOnly, Secure Cookie**で保存し，サーバー側（better-auth側）のDBで失効管理を**必須**とする．
+  - 失効API例は上記参照．
+- **Claimの原則**: `sub`, `role`, `email`など，アクセス制御に必要な最小限のデータのみを含める．
+- **RLS**: RLSポリシーはSQLでバージョン管理し，テスト手順もドキュメントに記載．
+- **失効対応**: JWTの即時失効は，原則としてAccess Tokenの**期限切れに委ねる**．全ユーザの強制ログアウトが必要な場合は，better-auth側での**鍵のローテーション**で対応．
+- **監査ログ**: JWT発行・リフレッシュ・失効・認証失敗など主要イベントは監査ログに記録．
+- **通信**: HTTPS必須．
+- **鍵ローテーション手順**: 運用時の鍵の安全な切り替え（Supabaseとbetter-auth双方）は運用ドキュメント参照．
 
 ---
