@@ -3,7 +3,6 @@
 import SignIn from "@/components/sign-in";
 import { SignUp } from "@/components/sign-up";
 import { Tabs } from "@/components/ui/tabs2";
-import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Page() {
 

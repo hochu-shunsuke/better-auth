@@ -29,7 +29,8 @@ export default async function DashboardPage() {
 								<a href="/client-test/posts_public" style={{ color: '#2563eb', textDecoration: 'underline' }}>
 									posts_public へ
 								</a>
-							</li><li>
+							</li>
+							<li>
 								<a href="/api/auth/jwt" style={{ color: '#2563eb', textDecoration: 'underline' }}>
 									jwt取得
 								</a>

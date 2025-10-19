@@ -1,7 +1,6 @@
 "use client";
 import { useState } from "react";
 import { useSession } from "@/lib/auth-client";
-import { client as authClient } from "@/lib/auth-client";
 
 export default function PostsPrivateClient() {
   const [content, setContent] = useState("");
