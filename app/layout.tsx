@@ -5,6 +5,7 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Wrapper, WrapperWithQuery } from "@/components/wrapper";
 import { createMetadata } from "@/lib/metadata";
+import Navbar from "@/components/navbar";
 
 export const metadata = createMetadata({
 	title: {
@@ -28,6 +29,7 @@ export default function RootLayout({
 			<body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
 				<ThemeProvider attribute="class" defaultTheme="dark">
 					<Wrapper>
+					<Navbar />
 						<WrapperWithQuery>{children}</WrapperWithQuery>
 					</Wrapper>
 					<Toaster richColors closeButton />
