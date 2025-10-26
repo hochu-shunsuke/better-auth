@@ -86,7 +86,7 @@ export default function SignIn() {
 									{
 										onSuccess(context) {
 											toast.success("Successfully signed in");
-											router.push(getCallbackURL(params));
+											router.push(getCallbackURL(params!));
 										},
 										onError(context) {
 											toast.error(context.error.message);
