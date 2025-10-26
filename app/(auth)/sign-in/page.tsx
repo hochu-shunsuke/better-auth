@@ -3,8 +3,19 @@
 import SignIn from "@/components/sign-in";
 import { SignUp } from "@/components/sign-up";
 import { Tabs } from "@/components/ui/tabs2";
+import { client } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Page() {
+	const { data: session } = client.useSession();
+	const router = useRouter();
+
+	useEffect(() => {
+		if (session) {
+			router.push("/dashboard");
+		}
+	}, [session, router]);
 
 	return (
 		<div className="w-full">

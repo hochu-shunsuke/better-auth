@@ -5,14 +5,14 @@ import { GeistMono } from "geist/font/mono";
 import { GeistSans } from "geist/font/sans";
 import { Wrapper, WrapperWithQuery } from "@/components/wrapper";
 import { createMetadata } from "@/lib/metadata";
+import Navbar from "@/components/navbar";
 
 export const metadata = createMetadata({
 	title: {
 		template: "%s | Better Auth",
 		default: "Better Auth",
 	},
-	description: "The most comprehensive authentication library for typescript",
-	metadataBase: new URL("https://demo.better-auth.com"),
+	description: "The most comprehensive authentication library for typescript demo app",
 });
 
 export default function RootLayout({
@@ -28,6 +28,7 @@ export default function RootLayout({
 			<body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
 				<ThemeProvider attribute="class" defaultTheme="dark">
 					<Wrapper>
+						<Navbar />
 						<WrapperWithQuery>{children}</WrapperWithQuery>
 					</Wrapper>
 					<Toaster richColors closeButton />
