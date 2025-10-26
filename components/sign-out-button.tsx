@@ -20,8 +20,7 @@ export default function SignOutButton() {
           await signOut({
             fetchOptions: {
               onSuccess() {
-                // navigate to sign-in after successful sign out
-                router.push("/sign-in");
+                window.location.href = "/sign-in";
               },
               onError() {
                 toast.error("Failed to sign out");

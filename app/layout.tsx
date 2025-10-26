@@ -12,8 +12,7 @@ export const metadata = createMetadata({
 		template: "%s | Better Auth",
 		default: "Better Auth",
 	},
-	description: "The most comprehensive authentication library for typescript",
-	metadataBase: new URL("https://demo.better-auth.com"),
+	description: "The most comprehensive authentication library for typescript demo app",
 });
 
 export default function RootLayout({
@@ -29,7 +28,7 @@ export default function RootLayout({
 			<body className={`${GeistSans.variable} ${GeistMono.variable} font-sans`}>
 				<ThemeProvider attribute="class" defaultTheme="dark">
 					<Wrapper>
-					<Navbar />
+						<Navbar />
 						<WrapperWithQuery>{children}</WrapperWithQuery>
 					</Wrapper>
 					<Toaster richColors closeButton />

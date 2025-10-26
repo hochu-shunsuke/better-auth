@@ -1,18 +1,29 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 import { createJwtSupabaseClient } from '@/lib/supabase-client';
 
 // GET: 自分の投稿一覧取得
 export async function GET(req: NextRequest) {
+  // better-authでsessionチェック
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // 自作JWTを使用（クライアントから送信されたもの）
   const authHeader = req.headers.get('authorization');
   if (!authHeader) {
     return NextResponse.json({ error: 'JWT required' }, { status: 401 });
   }
   const jwt = authHeader.replace('Bearer ', '');
   const supabase = createJwtSupabaseClient(jwt);
+
   const { data, error } = await supabase
     .from('posts_private')
     .select('*')
     .order('created_at', { ascending: false });
+
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
@@ -21,18 +32,28 @@ export async function GET(req: NextRequest) {
 
 // POST: 新規投稿（user_idはJWTのsubと一致している必要あり）
 export async function POST(req: NextRequest) {
+  // better-authでsessionチェック
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // 自作JWTを使用（クライアントから送信されたもの）
   const authHeader = req.headers.get('authorization');
   if (!authHeader) {
     return NextResponse.json({ error: 'JWT required' }, { status: 401 });
   }
   const jwt = authHeader.replace('Bearer ', '');
   const supabase = createJwtSupabaseClient(jwt);
+
   const body = await req.json();
   const { user_id, content } = body;
+
   const { data, error } = await supabase
     .from('posts_private')
     .insert([{ user_id, content }])
     .select();
+
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 400 });
   }
